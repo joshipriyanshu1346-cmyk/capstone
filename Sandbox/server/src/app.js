@@ -1,6 +1,9 @@
 import express from 'express';
 import morgan from 'morgan';
-// https://nextstep.tcsapps.com/indiacampus/#
+import {createPod} from './kubernetes/pod.js';
+import {createService} from './kubernetes/service.js';
+import {v4 as uuid} from 'uuid';
+
 
 const app = express();
 
@@ -15,5 +18,31 @@ app.get('/api/sandbox/health', (req, res) => {
     message: 'Sandbox API is healthy!' });
 });
 
+app.post('/api/sandbox/create', async (req, res) => {
+  try {
+    const sandboxId = uuid();
 
+    console.log("Creating sandbox:", sandboxId);
+
+    await Promise.all([
+      createPod(sandboxId),
+      createService(sandboxId)
+    ]);
+
+    res.status(201).json({
+      status: 'success',
+      message: `Sandbox environment created with ID: ${sandboxId}`,
+      sandboxId,
+      previewUrl: `http://preview/localhost/${sandboxId}`
+    });
+
+  } catch (err) {
+    console.error("ERROR:", err);
+
+    res.status(500).json({
+      status: 'error',
+      message: err.message
+    });
+  }
+});
 export default app;
