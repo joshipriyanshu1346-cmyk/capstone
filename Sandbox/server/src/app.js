@@ -20,20 +20,20 @@ app.get('/api/sandbox/health', (req, res) => {
 
 app.post('/api/sandbox/create', async (req, res) => {
   try {
-    const sandboxId = uuid();
+    const sandboxId = uuid();// Generate a unique ID for the sandbox
 
     console.log("Creating sandbox:", sandboxId);
 
     await Promise.all([
-      createPod(sandboxId),
-      createService(sandboxId)
+      createPod(sandboxId),// Create a Kubernetes pod for the sandbox
+      createService(sandboxId)// Create a Kubernetes service for the sandbox
     ]);
 
     res.status(201).json({
       status: 'success',
       message: `Sandbox environment created with ID: ${sandboxId}`,
       sandboxId,
-      previewUrl: `http://preview/localhost/${sandboxId}`
+      previewUrl: `http://${sandboxId}.preview.localhost`
     });
 
   } catch (err) {

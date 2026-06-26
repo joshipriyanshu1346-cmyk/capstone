@@ -1,7 +1,9 @@
 import express from 'express';
+import morgan from 'morgan';
 import {createProxyMiddleware} from 'http-proxy-middleware';
 
 const app = express();
+
 app.use(morgan('combined'));
 
 app.get('/api/status/healthz', (req, res) => {

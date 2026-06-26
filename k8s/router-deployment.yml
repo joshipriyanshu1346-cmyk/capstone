@@ -9,10 +9,10 @@ spec:
   selector:
     matchLabels:
       app: router
-    template:
+  template:
     metadata:
       labels:
-        name: router
+        app: router
     spec:
       containers:
         - image: router
@@ -21,7 +21,7 @@ spec:
             requests:
               cpu: "250m"
               memory: "250M"
-             limits:
+            limits:
               cpu: "500m"
               memory: "500M" 
           livenessProbe:
