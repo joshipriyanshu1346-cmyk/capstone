@@ -1,9 +1,7 @@
 import app from './src/app.js';
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Sandbox API is running on port ${PORT}`);
-});
+app.listen(3000, () => {
+    console.log('Sandbox server is running on port 3000');
+}) 
 
 

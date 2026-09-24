@@ -2,10 +2,13 @@ import express from 'express';
 import morgan from 'morgan';
 import {createPod} from './kubernetes/pod.js';
 import {createService} from './kubernetes/service.js';
+import {waitForPod as waitForPodReady} from './kubernetes/waitForPod.js';
+import {normalizeKubernetesError} from './kubernetes/config.js';
 import {v4 as uuid} from 'uuid';
 
 
 const app = express();
+app.disable('x-powered-by');
 
 // Middleware
 app.use(morgan('dev'));
@@ -23,11 +26,9 @@ app.post('/api/sandbox/create', async (req, res) => {
     const sandboxId = uuid();// Generate a unique ID for the sandbox
 
     console.log("Creating sandbox:", sandboxId);
-
-    await Promise.all([
-      createPod(sandboxId),// Create a Kubernetes pod for the sandbox
-      createService(sandboxId)// Create a Kubernetes service for the sandbox
-    ]);
+    await createPod(sandboxId);
+    await createService(sandboxId);
+    await waitForPodReady(sandboxId);
 
     res.status(201).json({
       status: 'success',
@@ -39,9 +40,12 @@ app.post('/api/sandbox/create', async (req, res) => {
   } catch (err) {
     console.error("ERROR:", err);
 
-    res.status(500).json({
+    const normalizedError = normalizeKubernetesError(err);
+    const statusCode = normalizedError.message.includes('Kubernetes cluster') || normalizedError.message.includes('Kubernetes access') ? 503 : 500;
+
+    res.status(statusCode).json({
       status: 'error',
-      message: err.message
+      message: normalizedError.message || 'Sandbox creation failed'
     });
   }
 });

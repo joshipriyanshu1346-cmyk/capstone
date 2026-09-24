@@ -1,14 +1,16 @@
+
 FROM node:20-alpine
 
 WORKDIR /workspace
 
 COPY package*.json ./
 
-RUN npm install
+# Install all dependencies including devDependencies
+RUN npm install --include=dev
 
 COPY . .
 
 EXPOSE 5173
 
-CMD ["npm", "run", "dev"]
-
+# Run Vite dev server listening on all interfaces
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "express": "^4.21.2",
     "http-proxy-middleware": "^4.1.1",
+    "morgan": "^1.10.3",
+    "nodemon": "^3.1.14",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },
