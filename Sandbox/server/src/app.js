@@ -10,6 +10,11 @@ import {v4 as uuid} from 'uuid';
 const app = express();
 app.disable('x-powered-by');
 
+export function buildPreviewUrl(sandboxId, port = process.env.PREVIEW_PORT || '8081') {
+  const portSuffix = port ? `:${port}` : '';
+  return `http://${sandboxId}.preview.localhost${portSuffix}`;
+}
+
 // Middleware
 app.use(morgan('dev'));
 app.use(express.json());
@@ -34,7 +39,7 @@ app.post('/api/sandbox/create', async (req, res) => {
       status: 'success',
       message: `Sandbox environment created with ID: ${sandboxId}`,
       sandboxId,
-      previewUrl: `http://${sandboxId}.preview.localhost`
+      previewUrl: buildPreviewUrl(sandboxId)
     });
 
   } catch (err) {
