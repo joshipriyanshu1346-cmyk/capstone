@@ -50,7 +50,7 @@ export const createService = async (sandboxId) => {
         if (serviceData?.spec?.clusterIP) {
             console.log(`[SERVICE] Service IP: ${serviceData.spec.clusterIP}`);
         }
-        console.log(`[SERVICE] Service will be accessible at: http://${serviceName}:80`);
+        console.log(`[SERVICE] Service will be accessible at: http://${serviceName}`);
         
         return serviceData;
     } catch (error) {

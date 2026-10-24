@@ -1,0 +1,27 @@
+# kind: Service
+# apiVersion: v1
+# metadata:
+#   name: sandbox-service
+#   labels:
+#     app: sandbox
+# spec:
+#   selector:
+#     app: sandbox-app
+#   type: ClusterIP
+#   ports:
+#   - name: main-sandbox-port
+#     port: 80
+#     targetPort: 5173
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sandbox-service
+spec:
+  type: ClusterIP
+  selector:
+    app: sandbox-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3000
